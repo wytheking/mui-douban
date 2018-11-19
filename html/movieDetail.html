@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<link href="../css/mui.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="../css/style.css" />
+	<style type="text/css">
+		.top-image-block {
+			text-align: center;
+			padding-top: 10px;
+			padding-bottom: 10px;
+			background: #3c3c3c;
+		}
+		.mui-bar-nav {
+		    top: 0;		
+		    -webkit-box-shadow: none;
+		    box-shadow: none;
+		}
+		.mui-ellipsis-4 {
+		    display: -webkit-box;
+		    overflow: hidden;		
+		    white-space: normal !important;
+		    text-overflow: ellipsis;
+		    word-wrap: break-word;		
+		    -webkit-line-clamp: 4
+		    -webkit-box-orient: vertical;
+		}
+		.comment-head-photo {
+			width: 30px;
+			height: 30px;
+			border-radius:30px ;
+		}
+		.mui-table-view {
+		    position: relative;		
+		    margin-top: 0;
+		    margin-bottom: 0;
+		    padding-left: 0;		
+		    list-style: none;		
+		    background-color: #EFEFF4;
+		}
+		.mui-table-view:before {
+		    position: absolute;
+		    top: 0;
+		    right: 0;
+		    left: 0;		
+		    height: 0;		
+		    content: '';
+		    -webkit-transform: scaleY(.5);
+		            transform: scaleY(.5);
+			background-color: #c8c7cc;
+		}		
+	</style>
+</head>
+
+<body>
+	
+<header class="mui-bar mui-bar-nav">
+    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+    <h1 class="mui-title">电影详情</h1>
+</header>
+<div class="mui-content" id="movieDetail">
+    <div class="top-image-block">
+    	<img :src="cover" style="width: 160px;height: 240px;vertical-align: top;" />
+    </div>
+    <div style="padding: 15px;height: 90px;">
+    	<div style="float: left;">
+    		<span class="dark-big" style="display: block;">{{title}}</span>
+    		<span class="gray-small" style="display: block;">{{year}} / {{countries.toString().replace(/,/g,' / ')}} / {{genres.toString().replace(/,/g,' / ')}}</span>
+    		<span class="gray-small" style="display: block;">导演：{{directors}}</span>
+    	</div>
+    	<div style="float:right;width: 70px;height: 60px;background: #FFFFFF;text-align: center;box-shadow: 0 0 10px #AAAAAA;">
+    		<span class="gray-micro" style="display: block;vertical-align: middle;margin-top: 5px;line-height: 15px;">豆瓣评分</span>
+    		<span class="orange-big" style="display: block;line-height: 20px;" v-if="score > 0">{{score}}</span>
+    		<span class="orange-small" style="display: block;line-height: 20px;" v-else>暂无评分...</span>
+    		<span class="gray-small" style="display: block;line-height: 15px;">{{ratingCount}}人</span>
+    	</div>
+    </div>
+    <div style="height: 0.5px;background: #A2A2A2;margin: 0 15px;"></div>
+    <p class="gray-medium" style="margin: 10px 15px;">剧情简介</p>
+    <p class="dark-medium mui-ellipsis-4" style="margin: 0 15px;">{{summary}}</p>
+    
+    <p class="gray-medium" style="margin: 10px 15px;">演员</p>
+    <div style="overflow-x: scroll;overflow-x: visible;white-space: nowrap;padding-left: 15px;">
+    	<div style="display: inline-block;" v-for="item in casts" :key="item.id" @click="openDetail(item)">
+    		<img :src="item.avatars.medium" style="width: 70px;height: 100px;margin-right: 10px;"/>
+    		<div class="dark-micro mui-ellipsis" style="width: 70px;text-align: center;">{{item.name}}</div>
+    	</div>
+    </div>
+    
+    <p class="gray-medium" style="margin-top: 10px;padding: 5px 0;text-align: center;background: #E6E6E6;">评论</p>
+    <ul class="mui-table-view" style="background: #FFFFFF;">
+    	<li class="mui-table-view-cell">
+    		<img src="../images/ma.png" class="comment-head-photo  mui-pull-left" />
+    		<div>
+    			<span class="dark-medium" style="line-height: 30px;text-align: center;margin-left: 10px;">叶子</span>
+    			<span class="gray-medium" style="line-height: 30px;text-align: center;float: right;">2018-11-17</span>
+    		</div>
+    		<p class="gray-medium" style="margin-left: 40px;">
+    			毒液来袭，我已中毒太深！
+    		</p>
+    	</li>
+    	<li class="mui-table-view-cell">
+    		<img src="../images/logo.png" class="comment-head-photo  mui-pull-left" />
+    		<div>
+    			<span class="dark-medium" style="line-height: 30px;text-align: center;margin-left: 10px;">Wythe</span>
+    			<span class="gray-medium" style="line-height: 30px;text-align: center;float: right;">2018-11-16</span>
+    		</div>
+    		<p class="gray-medium" style="margin-left: 40px;">
+    			这部电影非常棒！
+    		</p>
+    	</li>
+    </ul>
+</div>
+	
+	
+<script src="../js/mui.min.js"></script>
+<script src="../js/vue.min.js"></script>
+<script type="text/javascript">
+	mui.init();
+	
+	// 默认数据
+	function getDefaultData() {
+		return  {
+			title: '',
+			cover: '',
+			score: '',
+			ratingCount: '',
+			summary: '',
+			countries: '',
+			year: '',
+			genres: '',
+			casts: [],
+			directors: []
+		}
+	}
+	
+	// vue对象
+	var data_Detail = new Vue({
+		el: '#movieDetail',
+		data: getDefaultData(),
+		methods: {
+			resetData: function() { // 重置数据
+				//这个方法是较新的 API，用来复制对象的 Object.assign()。实际开发中，通常会有兼容的库来处理。可以将其替换成 mui.extend
+				// Object.assign(this.$data,getDefaultData());
+				mui.extend(this.$data,getDefaultData());
+			},
+			open_Detail: function(item) {
+				// 打开演员详情页面
+			},
+			openDetails: function(item) {
+				// 打开演员详情页面
+				mui.openWindow({
+					id: 'casts_details',
+					url: 'castsDetails.html',
+					extras: { // 在mui.openWindow()里面通过extras向要跳转的页面传参数
+						castId: item.id
+					}
+				})
+			}
+		}
+	});
+	
+	mui.plusReady(function(){
+		var self = plus.webview.currentWebview();
+		// 添加hide时间，清空页面数据，滚动到最顶部
+		self.addEventListener('hide', function(){
+			window.scrollTo(0,0);
+			data_Detail.resetData();
+		},false)
+	})
+	
+	// 请求详情数据
+//	mui.plusReady(function(){
+		//添加自定义事件
+		window.addEventListener('movieId', function(event) {
+			// 获取事件参数 
+			var id = event.detail.id;
+			console.log(id);
+			plus.nativeUI.showWaiting('加载中……', {
+				width: '100px',
+				height: '100px'
+			});
+			
+			// 根据id请求数据
+			mui.getJSON('http://api.douban.com/v2/movie/subject/'+id,function(resp){
+					console.log(resp.title);
+					data_Detail.title = resp.title;
+					data_Detail.cover = resp.images.medium;
+					data_Detail.score = resp.rating.average;
+					data_Detail.ratingCount = resp.ratings_count;
+					data_Detail.summary = resp.summary;
+					data_Detail.countries = resp.countries.toString('/,/g',' / ');
+					data_Detail.year = resp.year;
+					data_Detail.genres = resp.genres.toString('/,/g',' / ');
+					data_Detail.casts = resp.casts;
+					data_Detail.directors = resp.directors[0].name;
+					plus.nativeUI.closeWaiting();
+				}
+			)
+			
+		});
+//	});
+	
+	
+	
+</script>
+	
+</body>
+
+</html>
