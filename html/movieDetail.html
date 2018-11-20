@@ -50,7 +50,8 @@
 		    -webkit-transform: scaleY(.5);
 		            transform: scaleY(.5);
 			background-color: #c8c7cc;
-		}		
+		}
+		.div::-webkit-scrollbar { display: none; }		
 	</style>
 </head>
 
@@ -82,8 +83,8 @@
     <p class="dark-medium mui-ellipsis-4" style="margin: 0 15px;">{{summary}}</p>
     
     <p class="gray-medium" style="margin: 10px 15px;">演员</p>
-    <div style="overflow-x: scroll;overflow-x: visible;white-space: nowrap;padding-left: 15px;">
-    	<div style="display: inline-block;" v-for="item in casts" :key="item.id" @click="openDetail(item)">
+    <div class="div" style="overflow-x: scroll;white-space: nowrap;padding-left: 15px;">
+    	<div style="display: inline-block;" v-for="item in casts" :key="item.id" @click="openDetails(item)">
     		<img :src="item.avatars.medium" style="width: 70px;height: 100px;margin-right: 10px;"/>
     		<div class="dark-micro mui-ellipsis" style="width: 70px;text-align: center;">{{item.name}}</div>
     	</div>
@@ -146,9 +147,6 @@
 				// Object.assign(this.$data,getDefaultData());
 				mui.extend(this.$data,getDefaultData());
 			},
-			open_Detail: function(item) {
-				// 打开演员详情页面
-			},
 			openDetails: function(item) {
 				// 打开演员详情页面
 				mui.openWindow({
@@ -164,7 +162,7 @@
 	
 	mui.plusReady(function(){
 		var self = plus.webview.currentWebview();
-		// 添加hide时间，清空页面数据，滚动到最顶部
+		// 添加hide事件，清空页面数据，滚动到最顶部
 		self.addEventListener('hide', function(){
 			window.scrollTo(0,0);
 			data_Detail.resetData();
@@ -196,7 +194,8 @@
 					data_Detail.genres = resp.genres.toString('/,/g',' / ');
 					data_Detail.casts = resp.casts;
 					data_Detail.directors = resp.directors[0].name;
-					plus.nativeUI.closeWaiting();
+					
+					plus.nativeUI.closeWaiting(); // 关闭loading
 				}
 			)
 			

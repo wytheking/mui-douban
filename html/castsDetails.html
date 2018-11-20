@@ -1,11 +1,20 @@
 <!doctype html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title></title>
-	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-	<link href="../css/mui.min.css" rel="stylesheet" />
-	<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<link href="../css/mui.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="../css/style.css"/>
+<style type="text/css">
+	.top-image-block {
+		text-align: center;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		background: #18D7D7;
+	}
+	.div::-webkit-scrollbar { display: none; }
+</style>
 </head>
 <body>
 	
@@ -13,13 +22,98 @@
     <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
     <h1 class="mui-title">演员详情</h1>
 </header>
-	
+<div class="mui-content" id="castsDetail">
+    <div class="top-image-block">
+    	<img :src="cover" style="width: 160px;height: 240px;vertical-align: top;" />
+    </div>
+   <div style="padding: 15px;background: #FFFFFF;">
+   		<div class="dark-big">{{name}}</div>
+   		<div class="gray-medium">{{enName}}</div>
+   		<div class="gray-small">个人简介</div>
+   		<div class="dark-medium">{{summary}}</div> 		
+   </div>
+   <div class="gray-small" style="padding-left: 15px;background: #FFFFFF;">
+   		代表作品
+	</div>
+	<div class="div" style="overflow-x: scroll;white-space: nowrap;padding-left: 15px;background: #FFFFFF;">
+		<div style="display: inline-block;" v-for="item in works">
+			<img :src="item.subject.images.medium" alt="" width="80" height="110" style="margin-right: 10px;" />
+			<div class="dark-micro mui-ellipsis" style="width: 80px;text-align: center;">
+				{{item.subject.title}}
+			</div>
+			<div class="orange-small mui-ellipsis" style="width: 80px;text-align: center;line-height: 15px;">
+				{{item.subject.rating.average}}分
+			</div>
+		</div>
+	</div>
+</div>
 	
 	
 <script src="../js/mui.min.js"></script>
 <script src="../js/vue.min.js"></script>
 <script type="text/javascript">
-	mui.init()
+	mui.init();
+	
+	// 默认数据
+	function getDefaultData() {
+		return  {
+			name: '',
+			enName: '',
+			cover: '',
+			summary: '',
+			works: []
+		}
+	}
+	
+	// vue对象
+	var data_Detail = new Vue({
+		el: '#castsDetail',
+		data: getDefaultData(),
+		methods: {
+			resetData: function() { // 重置数据
+				//这个方法是较新的 API，用来复制对象的 Object.assign()。实际开发中，通常会有兼容的库来处理。可以将其替换成 mui.extend
+				// Object.assign(this.$data,getDefaultData());
+				mui.extend(this.$data,getDefaultData());
+			},
+			openDetails: function(item) {
+				// 打开演员详情页面
+				mui.openWindow({
+					id: 'casts_details',
+					url: 'castsDetails.html',
+					extras: { // 在mui.openWindow()里面通过extras向要跳转的页面传参数
+						castId: item.id
+					}
+				})
+			}
+		}
+	});
+	
+	mui.plusReady(function(){
+		var self = plus.webview.currentWebview();
+		
+		// 添加hide事件，清空页面数据，滚动到最顶部
+		self.addEventListener('hide', function(){
+			window.scrollTo(0,0);
+			data_Detail.resetData();
+		},false)
+		
+		plus.nativeUI.showWaiting('加载中……', {
+			width: '100px',
+			height: '100px'
+		});
+	
+		mui.getJSON('http://api.douban.com/v2/movie/celebrity/'+self.castId, function(resp){
+			console.log(resp);
+			data_Detail.name = resp.name;
+			data_Detail.enName = resp.name_en;
+			data_Detail.cover = resp.avatars.medium;
+			data_Detail.summary = resp.name + ', ' + resp.gender + ', ' + resp.born_place;
+			data_Detail.works = resp.works;
+			
+			plus.nativeUI.closeWaiting(); // 关闭loading
+		})
+	})
+	
 </script>
 
 </body>

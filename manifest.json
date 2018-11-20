@@ -435,6 +435,21 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"html/movieDetail.html": {
+				"resources": [],
+				"refer": [
+					"html/castsDetails.html"
+				],
+				"priority": 0
+			},
+			"html/main-billboard.html": {
+				"resources": [],
+				"refer": [
+					"html/billboard-top250.html",
+					"html/billboard-box.html"
+				],
+				"priority": 0
 			}
 		},
 		"idle": {

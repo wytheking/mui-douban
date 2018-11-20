@@ -50,7 +50,7 @@
 						<span class="orange-medium" v-else  style="float: right;">暂无评分……</span>
 					</div>
 					<div class="mui-ellipsis gray-small">
-						导演：{{item.directo}}
+						导演：{{item.directors}}
 					</div>
 					<div class="mui-ellipsis gray-small">
 						主演：{{item.casts}}
@@ -237,7 +237,7 @@
 		});
 		
 		mui('.mui-scroll-wrapper').scroll({
-			bounce: false, //滚动条是否有弹力默认是true
+			//bounce: false, //滚动条是否有弹力默认是true
 			indicators: false
 		});	
 		
