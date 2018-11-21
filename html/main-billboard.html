@@ -81,7 +81,7 @@
     	<div class="item">
     		<div class="billboard" id="billboardTop">
     			<span class="billboard-title" style="background: linear-gradient(#941AE6,#F1E0FC);background: -webkit-gradient(#941AE6,#F1E0FC);">
-    				豆瓣Top250
+    				电影Top250
     			</span>
     		</div>
     	</div>
@@ -115,7 +115,7 @@
               			主演：{{item.casts}}
               		</div>             		
               	</div>
-              	<button type="button" class="mui-btn mui-btn-warning mui-btn-outlined mui-pull-right">想看</button>
+              	<button type="button" class="mui-btn mui-btn-warning mui-btn-outlined mui-pull-right" @click="wantLook(item.title)">想看</button>
             </a>
         </li>
     </ul>
@@ -136,6 +136,11 @@
 		el: '#movies',
 		data: {
 			movies: []
+		},
+		methods: {
+			wantLook: function (title)  {
+				mui.toast('期待:《' + title + '》上映！');
+			}
 		}
 	});
 	

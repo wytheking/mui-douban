@@ -54,6 +54,8 @@
 <script type="text/javascript">
 	mui.init();
 	
+	var detailPage = null;
+	
 	// 默认数据
 	function getDefaultData() {
 		return  {
@@ -83,7 +85,7 @@
 					extras: { // 在mui.openWindow()里面通过extras向要跳转的页面传参数
 						castId: item.id
 					}
-				})
+				})				
 			}
 		}
 	});

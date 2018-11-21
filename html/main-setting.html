@@ -6,19 +6,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
 <link rel="stylesheet" href="../css/mui.min.css">
+<link rel="stylesheet" href="../css/style.css">
 <style>
 	html,body {
-		/*background-color: #efeff4;*/
-		background-color: white;
+		background-color: #efeff4;
+		/*background-color: white;*/
 	}
 </style>
 </head>
 <body>
-	
-<div class="mui-content" style="background: white;">
-	<h1>设置</h1>
+<header class="mui-bar mui-bar-nav">
+    <h1 class="mui-title">设 置</h1>
+</header>	
+<div class="mui-content">
+	<div style="margin: 50px auto 100px;width: 100px;height: 100px;text-align: center;border-radius: 50%;box-shadow: 0 0 100px #18D7D7;">
+		<img src="../images/banner1.jpg" style="width: 100px;height: 100px;border-radius: 50%;" />
+		<p style="margin-top: 20px;font-size: 22px;">Wythe</p>
+	</div>	
+	<ul class="mui-table-view" style="margin-top: 0;">
+			<li class="mui-table-view-cell" id="me">
+	            <a class="mui-navigate-right">作者资料</a>
+	        </li>
+	        <li class="mui-table-view-cell" id="message">
+	            <a class="mui-navigate-right">意见反馈</a>
+	        </li>
+	        <li class="mui-table-view-cell" id="cache">
+	            <a class="mui-navigate-right">清除缓存</a>
+	        </li>
+	        <li class="mui-table-view-cell" id="about">
+	            <a class="mui-navigate-right">关于我们</a>
+	        </li>
+	    </ul>
 </div>
 	
 </body>
@@ -26,6 +45,52 @@
 <script>
 	mui.init({
 		swipeBack:true //启用右滑关闭功能
+	});
+	
+	mui('#me')[0].addEventListener('tap', function(){
+		mui.openWindow({
+			id: 'Me',
+			url: './me.html'
+		})
+	});
+	
+	mui('#message')[0].addEventListener('tap', function(){
+		mui.toast('意见反馈！');
+	});
+	
+	mui('#about')[0].addEventListener('tap', function(){
+		mui.openWindow({
+			id: 'About',
+			url: './about.html'
+		})
+	});
+	
+	mui.plusReady(function(){
+		// 清除缓存
+		document.getElementById('cache').addEventListener('tap', function(){
+//			plus.cache.clear(function(){
+//				mui.toast('清除缓存成功！');
+//			});
+			plus.cache.calculate(function(size) {
+	            console.log(size)
+	            sizeCache = size;
+	            var size_m = parseFloat(sizeCache / (1024 * 1024)).toFixed(2);
+	            if(size_m > 1) {
+	                mui.confirm("您目前的系统缓存为" +size_m + "M？", "清除缓存", ["确认", "取消"], function(e) {
+	                    if(e.index == 1) {} else {
+	                        plus.cache.clear(function() {
+	                            mui.toast("缓存清除完毕!");
+	                        });
+	                    }
+	                });
+	            } else {
+	            	plus.cache.clear(function() {
+                        mui.toast("缓存清除完毕!");
+                    });
+	            }
+	        });
+
+		})
 	});
 </script>
 </html>
